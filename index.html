@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FeatureMe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Concepto: página de registro con el mismo azul plano del flyer. Texto a la izquierda, formulario a la derecha; en celular todo en una columna. */
+:root {
+  --bg: #0B1F6B;
+  --surface: #14297A;
+  --line: #3D56B0;
+  --fg: #FFFFFF;
+  --muted: #C5D2F5;
+  --cyan: #3DD6FF;
+  --yellow: #FFD23F;
+  --error: #FFB4BC;
+  --ink: #0B1F6B;
+  --font-display: 'Sora', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+.wrap { max-width: 1080px; margin: 0 auto; }
+a { color: var(--cyan); }
+header.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 24px; }
+.logo { font-family: var(--font-display); font-weight: 800; font-size: 32px; letter-spacing: -1.2px; line-height: 1; color: var(--fg); text-decoration: none; }
+.logo span { color: var(--cyan); }
+.top a.cta-link { font-weight: 600; font-size: 15px; color: var(--ink); background: var(--cyan); padding: 10px 18px; border-radius: 6px; text-decoration: none; }
+.top a.cta-link:hover { background: var(--yellow); }
+
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 540px); gap: 64px; align-items: center; padding-block: 16px 72px; }
+.hero h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(40px, 7vw, 72px); line-height: 1.02; letter-spacing: -0.035em; margin: 0; text-wrap: balance; }
+.hero h1 em { font-style: normal; color: var(--yellow); }
+.hook { font-family: var(--font-display); font-weight: 700; font-size: 21px; line-height: 1.3; margin: 32px 0 0; }
+.lead { color: var(--muted); max-width: 46ch; margin: 12px 0 0; text-wrap: pretty; }
+.price-line { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; margin-top: 32px; }
+.badge { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 132px; height: 132px; border-radius: 50%; background: var(--yellow); color: var(--ink); transform: rotate(-6deg); flex: none; }
+.badge small { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; }
+.badge strong { font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 1.05; letter-spacing: -0.04em; }
+.badge span { font-size: 13px; font-weight: 700; }
+.price-note { color: var(--muted); max-width: 22ch; font-size: 15px; }
+.price-note b { color: var(--fg); font-family: var(--font-display); font-size: 17px; display: block; }
+
+/* Formulario */
+.card { background: var(--surface); border-radius: 10px; padding: 44px 44px 48px; scroll-margin-top: 16px; }
+.card h2 { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
+.card .sub { color: var(--muted); margin: 12px 0 36px; font-size: 16px; }
+.row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
+.field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; min-width: 0; }
+label, legend { font-size: 15px; font-weight: 600; padding: 0; }
+.opt { font-weight: 400; color: var(--muted); }
+input[type=text], input[type=email], input[type=tel], select {
+  width: 100%; min-height: 54px; padding: 12px 16px; font: inherit; font-size: 16px; color: var(--fg);
+  background: var(--bg); border: 1.5px solid var(--line); border-radius: 8px;
+}
+select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--cyan) 50%), linear-gradient(135deg, var(--cyan) 50%, transparent 50%); background-position: calc(100% - 22px) 24px, calc(100% - 16px) 24px; background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; padding-right: 40px; }
+input::placeholder { color: #8DA0D8; }
+input:focus-visible, select:focus-visible, .choice input:focus-visible + span, button:focus-visible, a:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.field[data-invalid="true"] input, .field[data-invalid="true"] select { border-color: var(--error); }
+.err { color: var(--error); font-size: 13px; font-weight: 500; min-height: 0; margin: 0; }
+.err:empty { display: none; }
+fieldset { border: 0; padding: 0; margin: 0 0 28px; min-width: 0; }
+fieldset legend { margin-bottom: 12px; }
+.choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.choice { position: relative; display: block; }
+.choice input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.choice span { display: flex; align-items: center; min-height: 58px; padding: 12px 16px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--bg); font-size: 15px; line-height: 1.3; font-weight: 500; }
+.choice input:checked + span { background: var(--cyan); border-color: var(--cyan); color: var(--ink); font-weight: 700; }
+.check { display: flex; gap: 12px; align-items: flex-start; font-weight: 400; font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+.check input { width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--cyan); flex: none; }
+button.submit { width: 100%; min-height: 58px; margin-top: 28px; border: 0; border-radius: 8px; background: var(--yellow); color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 17px; cursor: pointer; }
+button.submit:hover { background: var(--cyan); }
+.formnote { color: var(--muted); font-size: 14px; margin: 16px 0 0; text-align: center; }
+
+.done h2 { color: var(--yellow); }
+.summary { margin: 20px 0 0; padding: 0; display: grid; gap: 0; }
+.summary div { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-top: 1px solid var(--line); font-size: 15px; }
+.summary dt { color: var(--muted); }
+.summary dd { margin: 0; font-weight: 600; text-align: right; overflow-wrap: anywhere; }
+button.ghost { margin-top: 20px; min-height: 48px; padding: 0 20px; background: transparent; color: var(--fg); border: 1.5px solid var(--line); border-radius: 6px; font: inherit; font-weight: 600; cursor: pointer; }
+button.ghost:hover { border-color: var(--cyan); }
+
+/* Qué hace */
+.band { background: #08184F; max-width: 1080px; margin: 0 auto; border-radius: 8px; }
+.what { padding: 48px 32px; }
+@media (max-width: 480px) { .what { padding: 32px 18px; } }
+.what h2, .plans h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(28px, 4vw, 40px); letter-spacing: -0.03em; line-height: 1.1; margin: 0 0 32px; text-wrap: balance; }
+.blocks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.block { padding: 24px 20px 26px; border-radius: 6px; color: var(--ink); }
+.block:nth-child(1) { background: var(--cyan); }
+.block:nth-child(2) { background: var(--yellow); }
+.block:nth-child(3) { background: #FFFFFF; }
+.block h3 { font-family: var(--font-display); font-weight: 800; font-size: 20px; margin: 0 0 6px; line-height: 1.15; }
+.block p { margin: 0; font-weight: 500; font-size: 15px; }
+
+.plans { padding-block: 64px; }
+.plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.plan { border: 1.5px solid var(--line); border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.plan.featured { background: var(--surface); border-color: var(--yellow); }
+.plan h3 { font-family: var(--font-display); font-weight: 700; font-size: 18px; margin: 0; }
+.plan .p { font-family: var(--font-display); font-weight: 800; font-size: 34px; letter-spacing: -0.04em; line-height: 1; }
+.plan .p small { font-family: var(--font-body); font-size: 15px; font-weight: 500; letter-spacing: 0; color: var(--muted); }
+.plan ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 15px; display: grid; gap: 6px; }
+footer { padding-block: 32px 40px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+
+@media (max-width: 880px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 40px; padding-bottom: 48px; }
+  .blocks, .plan-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .card { padding: 32px 20px 36px; }
+  .row, .choices { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="#inicio" aria-label="FeatureMe, inicio">feature<span>me</span></a>
+    <a class="cta-link" href="#registro">Registrarme</a>
+  </header>
+
+  <main id="inicio">
+    <section class="hero">
+      <div>
+        <h1>Tu futuro financiero <em>empieza hoy.</em></h1>
+        <p class="lead">Cuéntanos un poco de ti para empezar.</p>
+      </div>
+
+      <div class="card" id="registro">
+        <div id="formView">
+          <h2>Crea tu cuenta</h2>
+          <p class="sub">Déjanos tus datos y te avisamos cuando FeatureMe esté listo para ti.</p>
+          <form id="regForm" novalidate>
+            <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true"><label for="web">No llenar este campo</label><input type="text" id="web" name="web" tabindex="-1" autocomplete="off"></div>
+            <div class="row">
+              <div class="field" data-field="nombres">
+                <label for="nombres">Nombres</label>
+                <input type="text" id="nombres" name="nombres" autocomplete="given-name" placeholder="Juan" required>
+                <p class="err" id="err-nombres" aria-live="polite"></p>
+              </div>
+              <div class="field" data-field="apellidos">
+                <label for="apellidos">Apellidos</label>
+                <input type="text" id="apellidos" name="apellidos" autocomplete="family-name" placeholder="Pérez" required>
+                <p class="err" id="err-apellidos" aria-live="polite"></p>
+              </div>
+            </div>
+            <div class="field" data-field="correo">
+              <label for="correo">Correo electrónico</label>
+              <input type="email" id="correo" name="correo" autocomplete="email" placeholder="tu@email.com" required>
+              <p class="err" id="err-correo" aria-live="polite"></p>
+            </div>
+            <div class="field" data-field="celular">
+              <label for="celular">Celular <span class="opt">(opcional)</span></label>
+              <input type="tel" id="celular" name="celular" autocomplete="tel" inputmode="tel" placeholder="987 654 321">
+              <p class="err" id="err-celular" aria-live="polite"></p>
+            </div>
+            <div class="row">
+              <div class="field" data-field="edad">
+                <label for="edad">Edad</label>
+                <select id="edad" name="edad" required>
+                  <option value="">Elige un rango</option>
+                  <option>18 a 22 años</option>
+                  <option>23 a 26 años</option>
+                  <option>27 a 30 años</option>
+                  <option>31 años o más</option>
+                </select>
+                <p class="err" id="err-edad" aria-live="polite"></p>
+              </div>
+              <div class="field" data-field="ocupacion">
+                <label for="ocupacion">Ocupación</label>
+                <select id="ocupacion" name="ocupacion" required>
+                  <option value="">Elige una opción</option>
+                  <option>Estudio</option>
+                  <option>Trabajo</option>
+                  <option>Estudio y trabajo</option>
+                  <option>Trabajo independiente</option>
+                </select>
+                <p class="err" id="err-ocupacion" aria-live="polite"></p>
+              </div>
+            </div>
+
+            <fieldset data-field="meta">
+              <legend>¿Qué quieres mejorar primero?</legend>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="meta" value="Controlar mis gastos"><span>Controlar mis gastos</span></label>
+                <label class="choice"><input type="radio" name="meta" value="Evitar compras impulsivas"><span>Evitar compras impulsivas</span></label>
+                <label class="choice"><input type="radio" name="meta" value="Ahorrar para una meta"><span>Ahorrar para una meta</span></label>
+                <label class="choice"><input type="radio" name="meta" value="Saber cuánto tendré a futuro"><span>Saber cuánto tendré a futuro</span></label>
+              </div>
+              <p class="err" id="err-meta" aria-live="polite"></p>
+            </fieldset>
+
+            <div class="field" data-field="acepto" style="margin-bottom: 0">
+              <label class="check" for="acepto"><input type="checkbox" id="acepto" name="acepto"><span>Acepto los Términos y Condiciones y que FeatureMe use mis datos para contactarme.</span></label>
+              <p class="err" id="err-acepto" aria-live="polite"></p>
+            </div>
+
+            <p class="err" id="submitErr" role="alert" style="margin-top:20px;text-align:center"></p>
+            <button type="submit" class="submit">Registrarme</button>
+            <p class="formnote">Solo te pedimos lo necesario. No necesitas conectar tu banco.</p>
+          </form>
+        </div>
+
+        <div id="doneView" class="done" hidden>
+          <h2 id="doneTitle" tabindex="-1">¡Listo!</h2>
+          <p class="sub" id="doneText" style="margin-bottom: 0"></p>
+          <dl class="summary" id="summary"></dl>
+          <button type="button" class="ghost" id="again">Registrar a otra persona</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="wrap">
+  <footer>
+    <span>© 2026 FeatureMe</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  // Pega aquí la URL de tu aplicación web de Google Apps Script (termina en /exec).
+  var ENDPOINT = 'PEGA_AQUI_LA_URL_DE_GOOGLE';
+
+  var form = document.getElementById('regForm');
+  var formView = document.getElementById('formView');
+  var doneView = document.getElementById('doneView');
+  var summary = document.getElementById('summary');
+
+  var rules = {
+    nombres: function (v) { return v.trim().length >= 2 ? '' : 'Escribe tus nombres.'; },
+    apellidos: function (v) { return v.trim().length >= 2 ? '' : 'Escribe tus apellidos.'; },
+    correo: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? '' : 'Escribe un correo válido, por ejemplo tu@email.com.'; },
+    celular: function (v) {
+      var d = v.replace(/[\s-]/g, '');
+      if (!d) return '';
+      return /^(\+?51)?9\d{8}$/.test(d) ? '' : 'Escribe un celular de 9 dígitos que empiece con 9.';
+    },
+    edad: function (v) { return v ? '' : 'Elige tu rango de edad.'; },
+    ocupacion: function (v) { return v ? '' : 'Elige tu ocupación.'; },
+    meta: function (v) { return v ? '' : 'Elige lo que quieres mejorar primero.'; },
+    acepto: function (v) { return v ? '' : 'Debes aceptar para registrarte.'; }
+  };
+
+  function valueOf(name) {
+    var els = form.elements[name];
+    if (name === 'meta') {
+      var r = form.querySelector('input[name="' + name + '"]:checked');
+      return r ? r.value : '';
+    }
+    if (name === 'acepto') return els.checked;
+    return els.value;
+  }
+
+  function show(name, msg) {
+    var box = form.querySelector('[data-field="' + name + '"]');
+    document.getElementById('err-' + name).textContent = msg;
+    if (box) box.setAttribute('data-invalid', msg ? 'true' : 'false');
+  }
+
+  function check(name) {
+    var msg = rules[name](valueOf(name));
+    show(name, msg);
+    return !msg;
+  }
+
+  Object.keys(rules).forEach(function (name) {
+    var els = form.querySelectorAll('[name="' + name + '"]');
+    Array.prototype.forEach.call(els, function (el) {
+      el.addEventListener('change', function () { check(name); });
+      if (el.type === 'text' || el.type === 'email' || el.type === 'tel') {
+        el.addEventListener('blur', function () { if (el.value) check(name); });
+      }
+    });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var firstBad = null;
+    Object.keys(rules).forEach(function (name) {
+      if (!check(name) && !firstBad) firstBad = name;
+    });
+    if (firstBad) {
+      var target = form.querySelector('[name="' + firstBad + '"]');
+      if (target) target.focus();
+      return;
+    }
+    var data = {
+      nombres: form.elements.nombres.value.trim(),
+      apellidos: form.elements.apellidos.value.trim(),
+      correo: form.elements.correo.value.trim(),
+      celular: form.elements.celular.value.trim(),
+      edad: form.elements.edad.value,
+      ocupacion: form.elements.ocupacion.value,
+      meta: valueOf('meta'),
+      acepto: 'Sí',
+      web: form.elements.web.value
+    };
+    var btn = form.querySelector('button.submit');
+    var errBox = document.getElementById('submitErr');
+    errBox.textContent = '';
+    if (ENDPOINT.indexOf('PEGA_AQUI') === 0) {
+      errBox.textContent = 'El formulario todavía no está conectado a Google Sheets. Pega la URL en la variable ENDPOINT.';
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(data) })
+      .then(function () { showDone(data); })
+      .catch(function () {
+        errBox.textContent = 'No pudimos enviar tu registro. Revisa tu conexión e inténtalo de nuevo.';
+      })
+      .then(function () {
+        btn.disabled = false;
+        btn.textContent = 'Registrarme';
+      });
+  });
+
+  function showDone(data) {
+    document.getElementById('doneTitle').textContent = '¡Listo, ' + data.nombres + '!';
+    document.getElementById('doneText').textContent = 'Recibimos tu registro. Esto es lo que anotamos:';
+    summary.textContent = '';
+    [['Nombre', data.nombres + ' ' + data.apellidos], ['Correo', data.correo], ['Celular', data.celular || 'No indicado'], ['Edad', data.edad], ['Ocupación', data.ocupacion], ['Quieres mejorar', data.meta]].forEach(function (pair) {
+      var row = document.createElement('div');
+      var dt = document.createElement('dt');
+      var dd = document.createElement('dd');
+      dt.textContent = pair[0];
+      dd.textContent = pair[1];
+      row.appendChild(dt);
+      row.appendChild(dd);
+      summary.appendChild(row);
+    });
+    formView.hidden = true;
+    doneView.hidden = false;
+    document.getElementById('registro').scrollIntoView({ block: 'start' });
+    document.getElementById('doneTitle').focus();
+  }
+
+  document.getElementById('again').addEventListener('click', function () {
+    form.reset();
+    Object.keys(rules).forEach(function (name) { show(name, ''); });
+    doneView.hidden = true;
+    formView.hidden = false;
+    document.getElementById('nombres').focus();
+  });
+})();
+</script>
+
+</body>
+</html>
