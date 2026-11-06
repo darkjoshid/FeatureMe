@@ -135,20 +135,20 @@ footer { padding-block: 32px 40px; color: var(--muted); font-size: 14px; border-
 <div class="wrap">
   <header class="top">
     <a class="logo" href="#inicio" aria-label="FeatureMe, inicio">feature<span>me</span></a>
-    <a class="cta-link" href="#registro">Registrarme</a>
+    <a class="cta-link" href="#registro">Quiero información</a>
   </header>
 
   <main id="inicio">
     <section class="hero">
       <div>
         <h1>Tu futuro financiero <em>empieza hoy.</em></h1>
-        <p class="lead">Cuéntanos un poco de ti para empezar.</p>
+        <p class="lead">Ingresa tus datos para poder enviarte más información sobre FeatureMe.</p>
       </div>
 
       <div class="card" id="registro">
         <div id="formView">
-          <h2>Crea tu cuenta</h2>
-          <p class="sub">Déjanos tus datos y te avisamos cuando FeatureMe esté listo para ti.</p>
+          <h2>Quiero más información</h2>
+          <p class="sub">Completa el formulario y nos pondremos en contacto contigo.</p>
           <form id="regForm" novalidate>
             <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true"><label for="web">No llenar este campo</label><input type="text" id="web" name="web" tabindex="-1" autocomplete="off"></div>
             <div class="row">
@@ -215,7 +215,7 @@ footer { padding-block: 32px 40px; color: var(--muted); font-size: 14px; border-
             </div>
 
             <p class="err" id="submitErr" role="alert" style="margin-top:20px;text-align:center"></p>
-            <button type="submit" class="submit">Registrarme</button>
+            <button type="submit" class="submit">Enviar mis datos</button>
             <p class="formnote">Solo te pedimos lo necesario. No necesitas conectar tu banco.</p>
           </form>
         </div>
@@ -224,7 +224,7 @@ footer { padding-block: 32px 40px; color: var(--muted); font-size: 14px; border-
           <h2 id="doneTitle" tabindex="-1">¡Listo!</h2>
           <p class="sub" id="doneText" style="margin-bottom: 0"></p>
           <dl class="summary" id="summary"></dl>
-          <button type="button" class="ghost" id="again">Registrar a otra persona</button>
+          <button type="button" class="ghost" id="again">Enviar otros datos</button>
         </div>
       </div>
     </section>
@@ -259,7 +259,7 @@ footer { padding-block: 32px 40px; color: var(--muted); font-size: 14px; border-
     edad: function (v) { return v ? '' : 'Elige tu rango de edad.'; },
     ocupacion: function (v) { return v ? '' : 'Elige tu ocupación.'; },
     meta: function (v) { return v ? '' : 'Elige lo que quieres mejorar primero.'; },
-    acepto: function (v) { return v ? '' : 'Debes aceptar para registrarte.'; }
+    acepto: function (v) { return v ? '' : 'Debes aceptar para continuar.'; }
   };
 
   function valueOf(name) {
@@ -332,13 +332,13 @@ footer { padding-block: 32px 40px; color: var(--muted); font-size: 14px; border-
       })
       .then(function () {
         btn.disabled = false;
-        btn.textContent = 'Registrarme';
+        btn.textContent = 'Enviar mis datos';
       });
   });
 
   function showDone(data) {
     document.getElementById('doneTitle').textContent = '¡Listo, ' + data.nombres + '!';
-    document.getElementById('doneText').textContent = 'Recibimos tu registro. Esto es lo que anotamos:';
+    document.getElementById('doneText').textContent = 'Recibimos tus datos y pronto te enviaremos más información. Esto es lo que anotamos:';
     summary.textContent = '';
     [['Nombre', data.nombres + ' ' + data.apellidos], ['Correo', data.correo], ['Celular', data.celular || 'No indicado'], ['Edad', data.edad], ['Ocupación', data.ocupacion], ['Quieres mejorar', data.meta]].forEach(function (pair) {
       var row = document.createElement('div');
